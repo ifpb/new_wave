@@ -46,16 +46,16 @@ def run(args):
     now = datetime.datetime.now()
     end = now + datetime.timedelta(minutes=duration)
 
-    src_ip = args.source_ip # Origem dos pacotes
-    dst_ip = args.destination_ip # Destino dos pacotes
+    src_ip = args.source_ip # Packets Source
+    dst_ip = args.destination_ip # Packets Destiny
 
-    # se nenhuma origem for passada, utiliza-se
-    # o endereço IP da sua máquina
+    # If no src_ip is passed,
+    # it's used the ip from the local machine
     if src_ip is None:
         src_ip = get_if_addr(conf.iface)
 
     while now < end:
-        num_pkts = random.randint(10, 100) # Posso passar esses valores como parametro também
+        num_pkts = random.randint(10, 100)
         packet_interval = random.uniform(0.01, 0.1) # seconds
         packets = generate_packets(src_ip, dst_ip, num_pkts)
 
