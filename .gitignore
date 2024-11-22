@@ -24,4 +24,4 @@ build/
 .vscode
 .flake8
 
-app/provision/config.yaml
+*/app/provision/config.yaml
