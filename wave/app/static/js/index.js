@@ -35,7 +35,7 @@ setValueNumberRanger("cpuclientValue","vcpuclient")
 // Select Model
 
 document.getElementById("model-select").addEventListener("change", function() {
-  const modelsParms = ['sin', 'flashc', "step"];
+  const modelsParms = ['sin', 'flashc', 'step'];
 
   modelsParms.forEach((valor) => {
     document.getElementById(valor).style.display = "none";
@@ -44,5 +44,4 @@ document.getElementById("model-select").addEventListener("change", function() {
   if(selectedDiv){
     selectedDiv.style.display = "flex";
   }
-
 });

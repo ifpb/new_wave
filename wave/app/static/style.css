@@ -10,7 +10,8 @@ body {
 }
 
 #sin,
-#flashc {
+#flashc,
+#step {
     display: none;
 }
 
