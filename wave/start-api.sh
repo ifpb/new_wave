@@ -19,7 +19,7 @@ if [ -d venv ]; then
       pip3 install flask flask-restx python-dotenv requests > /dev/null
    fi
 else
-   echo "🕒 Craeting Python virtual environment... "
+   echo "🕒 Creating Python virtual environment... "
    python3 -m venv venv
    echo -e "🐍  Activating Python virtual environment... "
    source venv/bin/activate
