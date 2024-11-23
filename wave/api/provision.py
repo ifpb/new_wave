@@ -1,9 +1,10 @@
+from pathlib import Path
 import subprocess
 
 
 class Provision:
-    def __init__(self, script_dir: str):
-        self.__script_dir = script_dir
+    def __init__(self, script_dir: Path):
+        self.__script_dir = str(script_dir)
 
     def get_script_dir(self):
         return self.__script_dir
@@ -35,7 +36,7 @@ class Provision:
             command = f"""vagrant ssh client -c './wave/run_wave.sh -l sinusoid {args[1]} {args[2]} {args[3]} {args[4]}'"""
             return self.execute_command(command)
         elif args[0] == "step":
-            command = f"""vagrant ssh client -c './wave/run_wave.sh -l step {args[1]} {args[2]} {args[3]} '"""
+            command = f"""vagrant ssh client -c './wave/run_wave.sh -l step {args[1]} {args[2]} {args[3]}'"""
         else:
             command = f"""vagrant ssh client -c './wave/run_wave.sh -l flashcrowd {args[1]} {args[2]} {args[3]}'"""
             return self.execute_command(command)

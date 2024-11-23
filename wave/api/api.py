@@ -1,17 +1,14 @@
-import os
 from provision import Provision
-from pathlib import Path
 from flask import Flask
 from flask_restx import Resource, Api, reqparse
 from conf_grafana import generateAPIKey, createDataSources, createDashboard
+from paths import config_dir
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='LoadGen API',
           description='Provision API LoadGen',
           default='API', default_label='Default namespace')
 
-path_app = Path(os.path.abspath("app"))
-config_dir = Path(path_app, "provision")
 pro_env = Provision(config_dir)
 
 parser_sin = reqparse.RequestParser()

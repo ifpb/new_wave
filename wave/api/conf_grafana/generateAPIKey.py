@@ -1,8 +1,9 @@
 import os
 import requests
 from dotenv import load_dotenv, set_key
+from paths import ENV_PATH
 
-load_dotenv()
+load_dotenv(dotenv_path=ENV_PATH)
 
 IP_API_GR = os.getenv("IP_HOST_API")
 URL_AUTH_API = f'http://{IP_API_GR}:3000/api/auth/keys'
@@ -21,6 +22,7 @@ data = '''
 
 
 def create_api_key_grf():
+    load_dotenv(dotenv_path=ENV_PATH)
 
     GRAFANA_API_KEY = os.getenv('GRAFANA_API_KEY')
 
@@ -35,9 +37,9 @@ def create_api_key_grf():
         api_key = response.json()["key"]
         api_key_id = response.json()["id"]
         # Armazenar o valor da API Key em uma variável de ambiente
-        set_key(".env", "GRAFANA_API_KEY", f'{api_key}',
+        set_key(ENV_PATH, "GRAFANA_API_KEY", f'{api_key}',
                 quote_mode='always', export=False, encoding='utf-8')
-        set_key(".env", "GRAFANA_API_KEY_ID", f'{api_key_id}',
+        set_key(ENV_PATH, "GRAFANA_API_KEY_ID", f'{api_key_id}',
                 quote_mode='always', export=False, encoding='utf-8')
         return api_key
 

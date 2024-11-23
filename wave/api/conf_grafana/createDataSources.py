@@ -1,7 +1,9 @@
 import os
 import requests
 from dotenv import load_dotenv, get_key, set_key
-load_dotenv()
+from paths import ENV_PATH
+
+load_dotenv(dotenv_path=ENV_PATH)
 IP_API_GR = os.getenv("IP_HOST_API")
 URL_API_DS = f'http://{IP_API_GR}:3000/api/datasources'
 
@@ -38,6 +40,8 @@ csv_payload = {
 
 
 def create_data_src(url, api_key, type):
+    load_dotenv(dotenv_path=ENV_PATH)
+
     headers['Authorization'] = f'Bearer {api_key}'
     payload = csv_payload if type == 'csv' else prometheus_payload
 
@@ -53,9 +57,9 @@ def create_data_src(url, api_key, type):
         if CSV_DATASRC_ID:
 
             CSV_DATASRC_UID = get_key(
-                '.env', 'CSV_DATASRC_UID', encoding='utf-8')
+                ENV_PATH, 'CSV_DATASRC_UID', encoding='utf-8')
             CSV_DATASRC_ID = get_key(
-                '.env', 'CSV_DATASRC_ID', encoding='utf-8')
+                ENV_PATH, 'CSV_DATASRC_ID', encoding='utf-8')
 
             response_get_csv = requests.get(
                 f"{URL_API_DS}/{CSV_DATASRC_ID}", headers=headers)
@@ -73,9 +77,9 @@ def create_data_src(url, api_key, type):
         if PROMTS_DATASRC_ID:
 
             PROMTS_DATASRC_UID = get_key(
-                '.env', 'PROMTS_DATASRC_UID', encoding='utf-8')
+                ENV_PATH, 'PROMTS_DATASRC_UID', encoding='utf-8')
             PROMTS_DATASRC_ID = get_key(
-                '.env', 'PROMTS_DATASRC_ID', encoding='utf-8')
+                ENV_PATH, 'PROMTS_DATASRC_ID', encoding='utf-8')
 
             response_get_promts = requests.get(
                 f"{URL_API_DS}/{PROMTS_DATASRC_ID}", headers=headers)
@@ -98,9 +102,9 @@ def create_data_src(url, api_key, type):
         data_src_id = response.json()["datasource"]["id"]
 
         if type == 'prometheus':
-            set_key('.env', "PROMTS_DATASRC_UID", f'{data_src_uid}',
+            set_key(ENV_PATH, "PROMTS_DATASRC_UID", f'{data_src_uid}',
                     quote_mode='always', export=False, encoding='utf-8')
-            set_key('.env', "PROMTS_DATASRC_ID", f'{data_src_id}',
+            set_key(ENV_PATH, "PROMTS_DATASRC_ID", f'{data_src_id}',
                     quote_mode='always', export=False, encoding='utf-8')
             return {
                 'uid': data_src_uid,
@@ -108,9 +112,9 @@ def create_data_src(url, api_key, type):
             }
         if type == 'csv':
 
-            set_key('.env', "CSV_DATASRC_UID", f'{data_src_uid}',
+            set_key(ENV_PATH, "CSV_DATASRC_UID", f'{data_src_uid}',
                     quote_mode='always', export=False, encoding='utf-8')
-            set_key('.env', "CSV_DATASRC_ID", f'{data_src_id}',
+            set_key(ENV_PATH, "CSV_DATASRC_ID", f'{data_src_id}',
                     quote_mode='always', export=False, encoding='utf-8')
             return {
                 'uid': data_src_uid,

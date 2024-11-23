@@ -2,8 +2,9 @@ import os
 import json
 import requests
 from dotenv import load_dotenv, set_key, get_key
+from paths import ENV_PATH
 
-load_dotenv()
+load_dotenv(dotenv_path=ENV_PATH)
 
 IP_API_GR = os.getenv("IP_HOST_API")
 URL_API_DASHBOARD = f'http://{IP_API_GR}:3000/api/dashboards'
@@ -355,6 +356,7 @@ data = {
 
 
 def create_dashboard(api_key, promts_data_src_uid, csv_data_src_uid):
+    load_dotenv(dotenv_path=ENV_PATH)
 
     headers["Authorization"] = f"Bearer {api_key}"
 
@@ -368,7 +370,7 @@ def create_dashboard(api_key, promts_data_src_uid, csv_data_src_uid):
 
     DASHBOARD_UID = os.getenv('DASHBOARD_UID')
     if DASHBOARD_UID:
-        DASHBOARD_UID = get_key('.env', 'DASHBOARD_UID', encoding='utf-8')
+        DASHBOARD_UID = get_key(ENV_PATH, 'DASHBOARD_UID', encoding='utf-8')
         response_dashb = requests.get(
             f"{URL_API_DASHBOARD}/uid/{DASHBOARD_UID}", headers=headers)
         if response_dashb.status_code == 200:
@@ -382,7 +384,7 @@ def create_dashboard(api_key, promts_data_src_uid, csv_data_src_uid):
         dashb_uid = response.json()["uid"]
 
         # Armazenar o valor do uid em uma variável de ambiente
-        set_key(".env", "DASHBOARD_UID", f'{dashb_uid}',
+        set_key(ENV_PATH, "DASHBOARD_UID", f'{dashb_uid}',
                 quote_mode='always', export=False, encoding='utf-8')
         return dashb_uid
     else:
