@@ -103,8 +103,11 @@ def configure(app):
     @app.route('/up')
     def provision_up():
         try:
-            resquest = requests.get(f"{URL_API}/up")
+            conf_dict = conf_yaml.conf_model_dict()
+            pl = conf_dict[0]['platform']
+            resquest = requests.get(f"{URL_API}/up?pl={pl}")
             res_result = resquest.json()
+            
 
             if 'error' in res_result:
                 abort(404)
@@ -120,8 +123,11 @@ def configure(app):
     @app.route('/down')
     def provision_down():
         try:
-            resquest = requests.get(f"{URL_API}/down")
+            conf_dict = conf_yaml.conf_model_dict()
+            pl = conf_dict[0]['platform']
+            resquest = requests.get(f"{URL_API}/down?pl={pl}")
             res_result = resquest.json()
+    
 
             if 'error' in res_result:
                 abort(404)
@@ -137,6 +143,7 @@ def configure(app):
 
     @app.route('/execute')
     def execute_scenario():
+
         try:
             conf_dict = conf_yaml.conf_model_dict()
             if conf_dict[2]['model'] == 'sin':
@@ -144,23 +151,26 @@ def configure(app):
                 p = conf_dict[2]['p']
                 d = conf_dict[2]['d']
                 l = conf_dict[2]['l']
+                pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/sin?a={a}&p={p}&d={d}&l={l}")
+                    f"{URL_API}/execute/model/sin?a={a}&p={p}&d={d}&l={l}&pl={pl}")
                 res_result = resquest.json()
 
             if conf_dict[2]['model'] == 'flashc':
                 nl = conf_dict[2]['nl']
                 sl = conf_dict[2]['sl']
                 crd = conf_dict[2]['crd']
+                pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/flashc?nl={nl}&sl={sl}&crd={crd}")
+                    f"{URL_API}/execute/model/flashc?nl={nl}&sl={sl}&crd={crd}&pl={pl}")
                 res_result = resquest.json()
             if conf_dict[2]["model"] == "step":
                 i = conf_dict[2]['i']
                 j = conf_dict[2]['j']
                 d = conf_dict[2]['d']
+                pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/step?a={i}&p={j}&d={d}")
+                    f"{URL_API}/execute/model/step?a={i}&p={j}&d={d}&pl={p}&pl={pl}")
                 res_result = resquest.json()
 
 

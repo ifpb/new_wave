@@ -11,18 +11,28 @@ api = Api(app, version='1.0', title='LoadGen API',
 
 pro_env = Provision(config_dir)
 
+parser_up = reqparse.RequestParser()
+parser_up.add_argument('pl', type=str, help='Platform')
+
+parser_down = reqparse.RequestParser()
+parser_down.add_argument('pl', type=str, help='Platform')
+
+
 parser_sin = reqparse.RequestParser()
+parser_sin.add_argument('pl', type=str, help='Platform')
 parser_sin.add_argument('a', type=str, help='Sinusoid - Amplitude')
 parser_sin.add_argument('p', type=str, help='Sinusoid - Period')
 parser_sin.add_argument('d', type=str, help='Sinusoid - Duration')
 parser_sin.add_argument('l', type=str, help='Sinusoid - Lambd')
 
 parser_flashc = reqparse.RequestParser()
+parser_flashc.add_argument('pl', type=str, help='Platform')
 parser_flashc.add_argument('nl', type=str, help='Flashcrowd - Normal Load')
 parser_flashc.add_argument('sl', type=str, help='Flashcrowd - Shock Level')
 parser_flashc.add_argument('crd', type=str, help='Flashcrowd - Const RanpDown')
 
 parser_step = reqparse.RequestParser()
+parser_step.add_argument('pl', type=str, help='Platform')
 parser_step.add_argument('i', type=str, help='Step - Interval')
 parser_step.add_argument('j', type=str, help='Step - Jump')
 parser_step.add_argument('d', type=str, help='Step - Duration')
@@ -37,8 +47,10 @@ parser_config_grafana.add_argument(
 
 @api.route('/provision/up')
 class ProvisionInit(Resource):
+    @api.doc(parser=parser_up)
     def get(self):
-        pro_env.up()
+        args = parser_up.parse_args()
+        pro_env.up(args['pl'])
         return {'provision': 'up'}
 
 
@@ -75,8 +87,10 @@ class ProvisionGrafana(Resource):
 
 @api.route('/provision/down')
 class ProvisionDestroy(Resource):
+    @api.doc(parser=parser_down)
     def get(self):
-        pro_env.down()
+        args = parser_down.parse_args()
+        pro_env.down(args['pl'])
         return {'provision': 'down'}
 
 
@@ -86,7 +100,7 @@ class ProvisionExcuteScenarioSin(Resource):
     def get(self):
         args = parser_sin.parse_args()
         pro_env.execute_scenario(
-            'sin', args['a'], args['p'], args['d'], args['l'])
+            'sin', args['pl'],args['a'], args['p'], args['d'], args['l'])
 
         return {'provision': 'executed'}
 
@@ -96,7 +110,7 @@ class ProvisionExcuteScenarioFlashc(Resource):
     @api.doc(parser=parser_flashc)
     def get(self):
         args = parser_flashc.parse_args()
-        pro_env.execute_scenario('flashc', args['nl'], args['sl'], args['crd'])
+        pro_env.execute_scenario('flashc', args['pl'], args['nl'], args['sl'], args['crd'])
         return {'provision': 'executed'}
 
 @api.route('/provision/execute/model/step')
@@ -104,7 +118,7 @@ class ProvisionExcuteScenarioStep(Resource):
     @api.doc(parser=parser_step)
     def get(self):
         args = parser_step.parse_args()
-        pro_env.execute_scenario('step', args['i'], args['j'], args['d'])
+        pro_env.execute_scenario('step', args['pl'], args['i'], args['j'], args['d'])
         return {'provision': 'executed'}
 
 

@@ -15,7 +15,7 @@ services:
       STATIC_PATH: app/static
       API_PROVISION: $IP_HOST_API
   grafana:
-    image: grafana/grafana-oss
+    image: grafana/grafana-oss:11.0.7
     container_name: grafana
     ports:
       - "3000:3000"
