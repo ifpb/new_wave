@@ -31,7 +31,7 @@ command = [
            '--random',
            '--loop'
            ]
-log_file = "/tmp/stair_step_wave.txt"
+log_file = '/home/vlc/logs/stair_step_wave.txt'
 
 num_client = 0
 
@@ -72,6 +72,7 @@ def run(args):
     logger = logging.getLogger("run")
 
     # set the boundaries
+    now   = datetime.datetime.now()
     half  = now + datetime.timedelta(minutes=args.duration / 2)
     end   = now + datetime.timedelta(minutes=args.duration)
 
@@ -149,14 +150,15 @@ def main():
     # Process arguments
     args = parser.parse_args()
 
-    if args.verbose >= 1:
-        logging.basicConfig(filename='stair_step.log',level=logging.DEBUG)
-        # setup logger
-        logger.debug("Enabling debug mode")
+    if args.verbose is not None:
+        if args.verbose >= 1:
+            logging.basicConfig(filename='stair_step.log',level=logging.DEBUG)
+            # setup logger
+            logger.debug("Enabling debug mode")
 
-    else:
-        # setup logger
-        logging.basicConfig(filename='stair_step.log',level=logging.INFO)
+        else:
+            # setup logger
+            logging.basicConfig(filename='stair_step.log',level=logging.INFO)
 
     # main loop
     run(args)

@@ -26,7 +26,7 @@ command = [
            'vlc',
            '-I',
            'dummy',
-           '--zoom=0.25',
+           '--zoom=0.5',
            '--adaptive-logic=rate',
            '--random',
            '--loop',
@@ -88,7 +88,7 @@ def run(args):
     global alive_Rnorm
 
      #   file used for create flashcrowd wave graph
-    with open('/vagrant/scapy/logs/flashcrowd_wave.txt','w+') as file:
+    with open('/home/vlc/logs/flashcrowd_wave.txt','w+') as file:
         file.write(str(num_client) + '\n')
 
     # Rflash is a peak of a flash event. Rnorm is a normal load.
@@ -117,7 +117,7 @@ def run(args):
         pid_Rnorm = subprocess.Popen(rnorm_command, stderr=subprocess.STDOUT)
         alive_Rnorm.append(pid_Rnorm)
         
-        with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
+        with open('/home/vlc/logs/flashcrowd_wave.txt','a+') as file:
             file.write(str(num_client) + '\n')
 
     # rumpup phase
@@ -126,14 +126,14 @@ def run(args):
         alive.append(last_pid)
         
         for i in range(int(ru_sleep)):
-            with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
+            with open('/home/vlc/logs/flashcrowd_wave.txt','a+') as file:
                 file.write(str(num_client) + '\n')
 
         time.sleep(ru_sleep)
 
     # sustained phase
     for i in range(int(st_sleep)):
-            with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
+            with open('/home/vlc/logs/flashcrowd_wave.txt','a+') as file:
                 file.write(str(num_client) + '\n')
 
     time.sleep(st_sleep)
@@ -144,7 +144,7 @@ def run(args):
         alive.popleft()
 
         for i in range(int(rd_sleep)):
-            with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
+            with open('/home/vlc/logs/flashcrowd_wave.txt','a+') as file:
                 file.write(str(num_client) + '\n')
 
         time.sleep(rd_sleep)

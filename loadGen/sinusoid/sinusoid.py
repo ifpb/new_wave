@@ -1,5 +1,4 @@
-#!/usr/local/bin/python2.7
-# encoding: utf-8
+#!/usr/bin/env python3
 '''
 Created on Sept 21, 2018
 
@@ -66,12 +65,13 @@ def terminate_process(pid):
     num_client -= 1
 
 def run(args):
+           
     # setup logger
     logger = logging.getLogger("run")
 
     # set the boundaries
     start = now = datetime.datetime.now()
-    end = now + datetime.timedelta(minutes=args.duration)
+    end   = now + datetime.timedelta(minutes=args.duration)
 
     # Null file, just open it for future use
     FNULL = open(os.devnull, 'w')
@@ -80,14 +80,14 @@ def run(args):
     if args.sinusoid:
         A, T = args.sinusoid.split(',')
         
-        # The angular frequency is a scalar measure of rotation rate.
-        # One revolution is equal to 2 radians, hence omega = 2/T where
+        # The angular frequency  is a scalar measure of rotation rate.
+        # One revolution is equal to 2 radians, hence  = 2/T where
         # T is the period (measured in seconds),
         omega = 2.0 * math.pi / (float(T) * 60.0)
         A = float(A)
         logger.info('Using sine wave function with A=%f period=%f' % (A, omega))
 
-        # the amplitude must be smaller than the lambda
+        # the amplitude must be smaller than the lambda 
         assert(A < args.lambd)
 
     # general lambda
@@ -98,31 +98,30 @@ def run(args):
     num_client = 0
 
     global alive
-    alive = []
 
-    # used to define poisson interarrival times - time to sleep in between processes
+    #used to define poisson interarrival times - time to sleep in between processes
     global sleep_secs
 
-    # file used for create sinusoid wave graph
-    with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'w+') as file:
+    #   file used for create sinusoid wave graph
+    with open('/home/vlc/logs/sinusoid_wave.txt','w+') as file:
         file.write(str(num_client) + '\n')
 
     # until we finish
-    while now < end:
-        
+    while (now < end):
+    
         if args.sinusoid:
             # The sine wave or sinusoid is a mathematical curve that describes
             # a smooth repetitive oscillation.
             # Its most basic form as a function of time (t) is:
-            # y(t) = A * sin(2ft + phase) = A * sin(t + phase)
+            # y(t) = A * sin(2ft + ) = A * sin(t + )
             # where:
-            # - phase is the phase (equal to 0)
-            # - omega is evaluated at the previous step
+            #  -  is the phase (equal to 0)
+            #  -  is evaluated at the previous step
             lambd = args.lambd + A * math.sin(omega * (now - start).total_seconds()) 
-
+	
         # Poisson process:
         # The time between each pair of consecutive events has an exponential
-        # distribution with parameter lambda and each of these inter-arrival times
+        # distribution with parameter  and each of these inter-arrival times
         # is assumed to be independent of other inter-arrival times.
         if args.poisson:
             sleep_secs = random.expovariate(lambd / 60.0)
@@ -131,24 +130,24 @@ def run(args):
         logger.debug('Clients active = %s - lambda = %s' % (num_client, math.ceil(lambd)))
         
         for i in range(int(sleep_secs)):
-            with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'a+') as file:
+            with open('/home/vlc/logs/sinusoid_wave.txt','a+') as file:
                 file.write(str(num_client) + '\n')
         
         time.sleep(sleep_secs)
     
         if num_client < math.ceil(lambd):
-            # logger.info("Generating new process")
+            #logger.info("Generating new process")
             last_pid = start_process(args, FNULL)
             alive.append(last_pid)
-            # last_pid.wait()
-            with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'a+') as file:
+            #last_pid.wait()
+            with open('/home/vlc/logs/sinusoid_wave.txt','a+') as file:
                 file.write(str(num_client) + '\n')
 
         if num_client > math.ceil(lambd):
-            # logger.info("Killing a process")
+	    #logger.info("Killing a process")
             terminate_process(alive[0])
-            alive.pop(0)
-            with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'a+') as file:
+            alive.popleft()
+            with open('/home/vlc/logs/sinusoid_wave.txt','a+') as file:
                 file.write(str(num_client) + '\n')
 
         # refresh the timer
@@ -178,14 +177,15 @@ def main():
     # Process arguments
     args = parser.parse_args()
 
-    if args.verbose >= 1:
-        logging.basicConfig(filename='sinusoid.log',level=logging.DEBUG)
-        # setup logger
-        logger.debug("Enabling debug mode")
+    if args.verbose is not None:
+        if args.verbose >= 1:
+            logging.basicConfig(filename='sinusoid.log',level=logging.DEBUG)
+            # setup logger
+            logger.debug("Enabling debug mode")
 
-    else:
-        # setup logger
-        logging.basicConfig(filename='sinusoid.log',level=logging.INFO)
+        else:
+            # setup logger
+            logging.basicConfig(filename='sinusoid.log',level=logging.INFO)
 
     # main loop
     run(args)
