@@ -12,16 +12,16 @@ fi
 case $OPTION in
         "--start")
                 echo -e '🐳  Building containers ...'
-                docker-compose build > /dev/null
+                docker compose build > /dev/null
                 echo -e '🐳  Starting containers ...'
-                docker-compose up -d > /dev/null
+                docker compose up -d > /dev/null
                 echo -e '🚀  container started successfully!'
                 echo "🕒 Initilize API Provision ... "
                 bash start-api.sh
                 ;;
         "--destroy")
                 echo -e '🔴  Destroying containers and images ...'
-                docker-compose down --rmi all
+                docker compose down --rmi all
                 echo "" > .env
                 echo -e '🤝  Finished environment ...'
                 ;;

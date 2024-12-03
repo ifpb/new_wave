@@ -13,14 +13,16 @@ class Provision:
 
     def execute_command(self, command):
         try:
-            result = subprocess.run(
+            result = subprocess.Popen(
                 f"cd {self.get_script_dir()}; {command}",
                 shell=True, stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE, check=True
+                stderr=subprocess.PIPE
             )
-            return result.stdout.decode()
+            return
+            # return result.stdout.decode()
         except subprocess.CalledProcessError as e:
-            return e.stderr.decode()
+            return
+            # return e.stderr.decode()
 
     def up(self, platform):
         # Start the environment (Docker or Vagrant)
@@ -38,18 +40,18 @@ class Provision:
             if args[0] == 'sin':
                 command = f"""docker exec -it wave_vlc ./run_wave.sh -l sinusoid {args[2]} {args[3]} {args[4]} {args[5]}"""
             elif args[0] == "step":
-                command = f"""docker exec -it wave_vlc ./run_wave.sh -l step {args[2]} {args[3]} {args[4]}"""
-            elif args[0] == "flashcrowd":
+                command = f"""docker exec -it wave_vlc ./run_wave.sh -l stair_step {args[2]} {args[3]} {args[4]}"""
+            elif args[0] == "flashc":
                 command = f"""docker exec -it wave_vlc ./run_wave.sh -l flashcrowd {args[2]} {args[3]} {args[4]}"""
             else:
-                return "Invalid scenario. Use: 'sin', 'step' or 'flashcrowd'."
+                return "Invalid scenario. Use: 'sin', 'step' or 'flashc'."
         else:
             if args[0] == 'sin':
                 command = f"""vagrant ssh client -c './wave/run_wave.sh -l sinusoid {args[2]} {args[3]} {args[4]} {args[5]}'"""
             elif args[0] == "step":
-                command = f"""vagrant ssh client -c './wave/run_wave.sh -l step {args[2]} {args[3]} {args[4]}'"""
-            elif args[0] == "flashcrowd":
+                command = f"""vagrant ssh client -c './wave/run_wave.sh -l stair_step {args[2]} {args[3]} {args[4]}'"""
+            elif args[0] == "flashc":
                 command = f"""vagrant ssh client -c './wave/run_wave.sh -l flashcrowd {args[2]} {args[3]} {args[4]}'"""
             else:
-                return "Invalid scenario. Use: 'sin', 'step' or 'flashcrowd'."
+                return "Invalid scenario. Use: 'sin', 'step' or 'flashc'."
         return self.execute_command(command)

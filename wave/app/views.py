@@ -170,11 +170,8 @@ def configure(app):
                 d = conf_dict[2]['d']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/step?a={i}&p={j}&d={d}&pl={p}&pl={pl}")
+                    f"{URL_API}/execute/model/step?i={i}&j={j}&d={d}&pl={pl}")
                 res_result = resquest.json()
-
-
-
 
             if 'error' in res_result:
                 abort(404)
