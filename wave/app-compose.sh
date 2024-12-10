@@ -11,6 +11,8 @@ fi
 
 case $OPTION in
         "--start")
+                echo -e '📺  Activating xhost ...'
+                xhost +local:* > /dev/null
                 echo -e '🐳  Building containers ...'
                 docker compose build > /dev/null
                 echo -e '🐳  Starting containers ...'
@@ -23,6 +25,7 @@ case $OPTION in
                 echo -e '🔴  Destroying containers and images ...'
                 docker compose down --rmi all
                 echo "" > .env
+                xhost -local:* > /dev/null
                 echo -e '🤝  Finished environment ...'
                 ;;
         *)
