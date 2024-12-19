@@ -6,6 +6,9 @@ Created on Oct 6, 2024
 @author: danilocb21
 '''
 
+__version__ = 0.1
+__updated__ = '2024-12-10'
+
 from scapy.all import *
 import string
 import random
@@ -73,6 +76,11 @@ def main():
     logger = logging.getLogger("main")
 
     parser = argparse.ArgumentParser()
+    program_version = "v%s" % __version__
+    program_build_date = str(__updated__)
+    
+    parser.add_argument('-V', '--version', action='version', version='%%(prog)s %s (%s)' % (program_version, program_build_date))
+    parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
     parser.add_argument("-s", "--source_ip", dest="source_ip", help="set the source IP of the microburst")
     parser.add_argument("-d", "--destination_ip", dest="destination_ip", help="set the destination IP of the microburst", required=True)
     parser.add_argument("duration", type=float, help="set the duration of the experiment in minutes")
