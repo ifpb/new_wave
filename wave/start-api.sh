@@ -4,9 +4,22 @@
 
 dpkg --list | grep "venv" > /dev/null 
 
-if [ $? -ne 0 ]; then
-   echo -e "❌  package python3-venv is not installed!\n"
-   exit 1
+if command -v pacman &> /dev/null; then
+   # Arch Linux
+   if ! python3 -m venv --help &> /dev/null; then
+      echo -e "❌  Python venv module is not available. Install it using:\n"
+      echo "sudo pacman -S python"
+      exit 1
+   fi
+elif command -v dpkg &> /dev/null; then
+   # Debian-based systems
+   dpkg --list | grep "python3-venv" > /dev/null
+    
+   if [ $? -ne 0 ]; then
+      echo -e "❌  Package python3-venv is not installed! Install it using:\n"
+      echo "sudo apt install python3-venv"
+      exit 1
+    fi
 fi
 
 if [ -d venv ]; then	

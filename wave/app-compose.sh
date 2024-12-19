@@ -3,7 +3,19 @@
 
 OPTION=$1
 
-echo "IP_HOST_API=$(hostname -I | cut -d" " -f1)" > ./.env
+if [ -f /etc/os-release ]; then
+    source /etc/os-release
+    if [[ "$ID" == "arch" ]]; then
+        IP=$(hostname -i | awk '{print $1}')
+    else
+        IP=$(hostname -I | awk '{print $1}')
+    fi
+else
+    echo "Unable to detect the operating system. Please check your setup."
+    exit 1
+fi
+echo "IP_HOST_API=$IP" > ./.env
+
 ENVFILE=$PWD/.env
 if [ ! -s "$ENVFILE" ]; then
         echo "File .env does not exist or is empty!"; exit
