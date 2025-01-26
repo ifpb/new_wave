@@ -28,14 +28,12 @@ def configure(app):
 ---
 - traffic: server
   ip: "{request.form.get("ipserver")}"
-  gateway: "{request.form.get("gtwserver")}"
   ram: "{request.form.get('memserver')}"
   vcpu: "{request.form.get('cpuserver')}"
   platform: {request.form.get('plafmserver')}
 
 - traffic: client
   ip: "{request.form.get("ipclient")}"
-  gateway: "{request.form.get("gtwclient")}"
   ram: "{request.form.get('memclient')}"
   vcpu: "{request.form.get('cpuclient')}"
   platform: {request.form.get('plafmclient')}
@@ -190,7 +188,7 @@ def configure(app):
             elif conf_dict[2]['model'] == 'flashc':
                 model = 'flashcrowd'
             else:
-                model = 'step'
+                model = 'stair_step'
             resquest_gr = requests.get(
                 f"""{URL_API}/grafana/config?host_promts={conf_dict[0]['ip']}&wave_model={model}""")
 

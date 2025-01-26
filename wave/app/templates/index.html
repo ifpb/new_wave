@@ -19,7 +19,7 @@
                   placeholder="0.0.0.0"
                 />
               </div>
-              <div class="col-md-4">
+              <!-- <div class="col-md-4">
                 <label for="gateway-destination">Gateway</label>
                 <input
                   class="form-control"
@@ -27,8 +27,8 @@
                   id="gateway-destination"
                   name="gtwserver"
                   placeholder="0.0.0.0"
-                />
-              </div>
+                />/
+              </div> -->
 
               <div class="form-check form-check-inline">
                 <label for="select-platform-destination">Select platform</label>
@@ -37,10 +37,10 @@
                     class="form-check-input"
                     type="radio"
                     name="plafmserver"
-                    id="docker-destination"
+                    id="docker-server"
                     value="docker"
                   />
-                  <label class="form-check-label" for="docker-destination"
+                  <label class="form-check-label" for="docker-server"
                     >Docker</label
                   >
                 </div>
@@ -55,7 +55,7 @@
                   <label class="form-check-label" for="vm-server">VM</label>
                 </div>
               </div>
-              <div class="align-content-lg-center">
+              <div class="align-content-lg-center ram-cpu-fields">
                 <label for="memoryserver" class="col-form-label"
                   >RAM Memory</label
                 >
@@ -154,7 +154,7 @@
                   placeholder="0.0.0.0"
                 />
               </div>
-              <div class="col-md-4">
+              <!-- <div class="col-md-4">
                 <label for="gateway-source">Gateway</label>
                 <input
                   class="form-control"
@@ -163,7 +163,7 @@
                   id="gateway-source"
                   placeholder="0.0.0.0"
                 />
-              </div>
+              </div> -->
               <div class="form-check form-check-inline">
                 <label for="">Select platform</label>
                 <div class="form-check form-check-inline">
@@ -187,7 +187,7 @@
                   <label class="form-check-label" for="vm">VM</label>
                 </div>
               </div>
-              <div class="align-content-lg-center">
+              <div class="align-content-lg-center ram-cpu-fields-client">
                 <label for="memoryclient" class="col-form-label"
                   >RAM Memory</label
                 >
@@ -270,7 +270,7 @@
                     <option selected value="">Select model ...</option>
                     <option value="sin">sinusoid</option>
                     <option value="flashc">flashcrowd</option>
-                    <option value="step">step</option>
+                    <option value="step">stair step</option>
                   </select>
                 </div>
                 <div class="row g-2" id="sin">
@@ -404,6 +404,7 @@
                   </div>
                 </div>
               </div>
+              <div id="err-msg"></div>
             </div>
           </div>
         </div>

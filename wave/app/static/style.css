@@ -33,3 +33,15 @@ pre {
     border-style: solid;
     color: #252527;
 }
+
+#err-msg {
+    display: none;
+    margin-top: .3em;
+    color: red;
+    font-size: .875rem;
+}
+
+.ram-cpu-fields,
+.ram-cpu-fields-client {
+    display: none;
+}
