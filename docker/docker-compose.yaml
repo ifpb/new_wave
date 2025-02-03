@@ -1,0 +1,20 @@
+
+services:
+  apache:
+    image: ghcr.io/matheusfael/wave/apache
+    container_name: wave_apache
+      #ports:
+      #- "80:80"
+
+  client_container:
+    image: ghcr.io/matheusfael/wave/vlc
+    container_name: wave_vlc
+    command: [ "tail", "-f", "/dev/null" ] 
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix  
+      - ./logs:/home/vlc/logs
+    depends_on:
+      - apache
