@@ -36,6 +36,9 @@ case $OPTION in
         "--destroy")
                 echo -e '🔴  Destroying containers and images ...'
                 docker compose down --rmi all
+                cd app/provision
+                rm ./logs/*
+                vagrant destroy -f
                 echo "" > .env
                 xhost -local:* > /dev/null
                 echo -e '🤝  Finished environment ...'

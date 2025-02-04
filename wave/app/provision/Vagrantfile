@@ -35,7 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
        # Specify the hostname of the VM Server
        set.vm.hostname = "wave-server"
       else
-       set.vm.box = "ifpb/wave-client"
+       set.vm.box = "wave/client"
        # Specify the hostname of the VM Client
        set.vm.hostname = "wave-client"
        set.vm.synced_folder "./logs", "/home/vagrant/wave/logs"
