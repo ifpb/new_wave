@@ -3,6 +3,7 @@ from flask import Flask
 from flask_restx import Resource, Api, reqparse
 from conf_grafana import generateAPIKey, createDataSources, createDashboard
 from paths import config_dir
+import time
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='LoadGen API',
@@ -51,6 +52,11 @@ class ProvisionInit(Resource):
     def get(self):
         args = parser_up.parse_args()
         pro_env.up(args['pl'])
+        
+        if args['pl'] == 'vm':
+            while not config_dir.joinpath('logs/ready.txt').exists():
+                time.sleep(2)
+
         return {'provision': 'up'}
 
 
@@ -91,6 +97,11 @@ class ProvisionDestroy(Resource):
     def get(self):
         args = parser_down.parse_args()
         pro_env.down(args['pl'])
+        time.sleep(2) # wait for the vms or containers to be destroyed
+
+        for log_file in config_dir.joinpath('logs').iterdir():
+            log_file.unlink()
+
         return {'provision': 'down'}
 
 
