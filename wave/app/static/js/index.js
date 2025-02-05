@@ -38,6 +38,7 @@ document.getElementById("model-select").addEventListener("change", function() {
   const modelsParms = ['sin', 'flashc', 'step'];
 
   document.getElementById("err-msg").style.display = "none";
+  document.getElementById("mb-field").style.display = "none";
 
   modelsParms.forEach((valor) => {
     document.getElementById(valor).style.display = "none";
@@ -45,6 +46,7 @@ document.getElementById("model-select").addEventListener("change", function() {
   let selectedDiv = document.getElementById(this.value);
   if(selectedDiv){
     selectedDiv.style.display = "flex";
+    document.getElementById("mb-field").style.display = "block";
   }
 });
 

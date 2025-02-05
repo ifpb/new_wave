@@ -52,10 +52,12 @@ class ProvisionInit(Resource):
     def get(self):
         args = parser_up.parse_args()
         pro_env.up(args['pl'])
-        
+
         if args['pl'] == 'vm':
             while not config_dir.joinpath('logs/ready.txt').exists():
                 time.sleep(2)
+        else:
+            time.sleep(2) # temporary fix for docker not executing
 
         return {'provision': 'up'}
 

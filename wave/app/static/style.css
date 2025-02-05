@@ -41,6 +41,10 @@ pre {
     font-size: .875rem;
 }
 
+#mb-field {
+   display: none;
+}
+
 .ram-cpu-fields,
 .ram-cpu-fields-client {
     display: none;

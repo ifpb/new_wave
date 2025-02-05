@@ -38,6 +38,8 @@ def configure(app):
   vcpu: "{request.form.get('cpuclient')}"
   platform: {request.form.get('plafmclient')}
 
+- microburst: "{request.form.get('microburst', 'off')}"
+
 """
         if (request.form.get('select-model') == 'sin'):
 
@@ -144,31 +146,32 @@ def configure(app):
 
         try:
             conf_dict = conf_yaml.conf_model_dict()
-            if conf_dict[2]['model'] == 'sin':
-                a = conf_dict[2]['a']
-                p = conf_dict[2]['p']
-                d = conf_dict[2]['d']
-                l = conf_dict[2]['l']
+            mb = True if conf_dict[2]['microburst'] == 'on' else False
+            if conf_dict[3]['model'] == 'sin':
+                a = conf_dict[3]['a']
+                p = conf_dict[3]['p']
+                d = conf_dict[3]['d']
+                l = conf_dict[3]['l']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/sin?a={a}&p={p}&d={d}&l={l}&pl={pl}")
+                    f"{URL_API}/execute/model/sin?a={a}&p={p}&d={d}&l={l}&pl={pl}&mb={mb}")
                 res_result = resquest.json()
 
-            if conf_dict[2]['model'] == 'flashc':
-                nl = conf_dict[2]['nl']
-                sl = conf_dict[2]['sl']
-                crd = conf_dict[2]['crd']
+            if conf_dict[3]['model'] == 'flashc':
+                nl = conf_dict[3]['nl']
+                sl = conf_dict[3]['sl']
+                crd = conf_dict[3]['crd']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/flashc?nl={nl}&sl={sl}&crd={crd}&pl={pl}")
+                    f"{URL_API}/execute/model/flashc?nl={nl}&sl={sl}&crd={crd}&pl={pl}&mb={mb}")
                 res_result = resquest.json()
-            if conf_dict[2]["model"] == "step":
-                i = conf_dict[2]['i']
-                j = conf_dict[2]['j']
-                d = conf_dict[2]['d']
+            if conf_dict[3]["model"] == "step":
+                i = conf_dict[3]['i']
+                j = conf_dict[3]['j']
+                d = conf_dict[3]['d']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/step?i={i}&j={j}&d={d}&pl={pl}")
+                    f"{URL_API}/execute/model/step?i={i}&j={j}&d={d}&pl={pl}&mb={mb}")
                 res_result = resquest.json()
 
             if 'error' in res_result:
@@ -183,9 +186,9 @@ def configure(app):
     def analysis_result():
         try:
             conf_dict = conf_yaml.conf_model_dict()
-            if conf_dict[2]['model'] == 'sin':
+            if conf_dict[3]['model'] == 'sin':
                 model = 'sinusoid'
-            elif conf_dict[2]['model'] == 'flashc':
+            elif conf_dict[3]['model'] == 'flashc':
                 model = 'flashcrowd'
             else:
                 model = 'stair_step'
