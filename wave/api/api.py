@@ -18,6 +18,11 @@ parser_up.add_argument('pl', type=str, help='Platform')
 parser_down = reqparse.RequestParser()
 parser_down.add_argument('pl', type=str, help='Platform')
 
+parser_mb = reqparse.RequestParser()
+parser_mb.add_argument('pl', type=str, help='Platform')
+parser_mb.add_argument('server_ip', type=str, help='Server IP')
+parser_mb.add_argument('d', type=str, help='Duration')
+
 
 parser_sin = reqparse.RequestParser()
 parser_sin.add_argument('pl', type=str, help='Platform')
@@ -106,6 +111,14 @@ class ProvisionDestroy(Resource):
 
         return {'provision': 'down'}
 
+@api.route('/provision/execute/microburst')
+class ProvisionExecuteMicroBurst(Resource):
+    @api.doc(parser=parser_mb)
+    def get(self):
+        args = parser_mb.parse_args()
+        pro_env.run_microburst(args['pl'], args['server_ip'], args['d'])
+
+        return {'provision': 'executed'}
 
 @api.route('/provision/execute/model/sin')
 class ProvisionExcuteScenarioSin(Resource):

@@ -55,3 +55,11 @@ class Provision:
             else:
                 return "Invalid scenario. Use: 'sin', 'step' or 'flashc'."
         return self.execute_command(command)
+    
+    def run_microburst(self, *args):
+        if args[0] == "docker":
+            command = f"""docker exec -it wave_vlc './run_microburst.sh -l {args[1]} {args[2]}'"""
+        else:
+            command = f"""vagrant ssh client -c './wave/run_microburst.sh -l {args[1]} {args[2]}'"""
+
+        return self.execute_command(command)

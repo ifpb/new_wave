@@ -23,8 +23,8 @@ fi
 
 case $OPTION in
         "--start")
-                echo -e '📺  Activating xhost ...'
-                xhost +local:* > /dev/null
+                #echo -e '📺  Activating xhost ...'
+                #xhost +local:* > /dev/null
                 echo -e '🐳  Building containers ...'
                 docker compose build > /dev/null
                 echo -e '🐳  Starting containers ...'
@@ -40,7 +40,7 @@ case $OPTION in
                 rm ./logs/* > /dev/null 2>&1
                 vagrant destroy -f > /dev/null
                 echo "" > .env
-                xhost -local:* > /dev/null
+                #xhost -local:* > /dev/null
                 echo -e '🤝  Finished environment ...'
                 ;;
         *)

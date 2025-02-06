@@ -38,8 +38,6 @@ def configure(app):
   vcpu: "{request.form.get('cpuclient')}"
   platform: {request.form.get('plafmclient')}
 
-- microburst: "{request.form.get('microburst', 'off')}"
-
 """
         if (request.form.get('select-model') == 'sin'):
 
@@ -49,6 +47,7 @@ def configure(app):
   p: "{request.form.get('ped-sin')}"
   d: "{request.form.get('drn-sin')}"
   l: "{request.form.get('lmd-sin')}"
+  microburst: "{request.form.get('microburst', 'off')}"
 """
             conf_yaml.set_conf(conf)
             conf_yaml.set_conf_model(conf + conf_model_sin)
@@ -60,6 +59,7 @@ def configure(app):
   nl: "{request.form.get('nload-flashc')}"
   sl: "{request.form.get('shkl-flashc')}"
   crd: "{request.form.get('constrp-flashc')}"
+  microburst: "{request.form.get('microburst', 'off')}"
 """
             conf_yaml.set_conf(conf)
             conf_yaml.set_conf_model(conf + conf_model_flashc)
@@ -70,6 +70,7 @@ def configure(app):
   i: "{request.form.get('itvl-step')}"
   j: "{request.form.get('jmp-step')}"
   d: "{request.form.get('drn-step')}"
+  microburst: "{request.form.get('microburst', 'off')}"
 """
             conf_yaml.set_conf(conf)
             conf_yaml.set_conf_model(conf + conf_model_step)
@@ -146,32 +147,39 @@ def configure(app):
 
         try:
             conf_dict = conf_yaml.conf_model_dict()
-            mb = True if conf_dict[2]['microburst'] == 'on' else False
-            if conf_dict[3]['model'] == 'sin':
-                a = conf_dict[3]['a']
-                p = conf_dict[3]['p']
-                d = conf_dict[3]['d']
-                l = conf_dict[3]['l']
+
+            if conf_dict[2]['microburst'] == 'on':
+                server_ip = conf_dict[0]["ip"]
+                d = conf_dict[2].get('d') if conf_dict[2]['model'] != 'flashc' else "10"
+                pl = conf_dict[0]['platform']
+                requests.get(f"{URL_API}/execute/microburst?server_ip={server_ip}&d={d}&pl={pl}")
+
+            if conf_dict[2]['model'] == 'sin':
+                a = conf_dict[2]['a']
+                p = conf_dict[2]['p']
+                d = conf_dict[2]['d']
+                l = conf_dict[2]['l']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/sin?a={a}&p={p}&d={d}&l={l}&pl={pl}&mb={mb}")
+                    f"{URL_API}/execute/model/sin?a={a}&p={p}&d={d}&l={l}&pl={pl}")
                 res_result = resquest.json()
 
-            if conf_dict[3]['model'] == 'flashc':
-                nl = conf_dict[3]['nl']
-                sl = conf_dict[3]['sl']
-                crd = conf_dict[3]['crd']
+            if conf_dict[2]['model'] == 'flashc':
+                nl = conf_dict[2]['nl']
+                sl = conf_dict[2]['sl']
+                crd = conf_dict[2]['crd']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/flashc?nl={nl}&sl={sl}&crd={crd}&pl={pl}&mb={mb}")
+                    f"{URL_API}/execute/model/flashc?nl={nl}&sl={sl}&crd={crd}&pl={pl}")
                 res_result = resquest.json()
-            if conf_dict[3]["model"] == "step":
-                i = conf_dict[3]['i']
-                j = conf_dict[3]['j']
-                d = conf_dict[3]['d']
+
+            if conf_dict[2]["model"] == "step":
+                i = conf_dict[2]['i']
+                j = conf_dict[2]['j']
+                d = conf_dict[2]['d']
                 pl = conf_dict[0]['platform']
                 resquest = requests.get(
-                    f"{URL_API}/execute/model/step?i={i}&j={j}&d={d}&pl={pl}&mb={mb}")
+                    f"{URL_API}/execute/model/step?i={i}&j={j}&d={d}&pl={pl}")
                 res_result = resquest.json()
 
             if 'error' in res_result:
@@ -186,9 +194,10 @@ def configure(app):
     def analysis_result():
         try:
             conf_dict = conf_yaml.conf_model_dict()
-            if conf_dict[3]['model'] == 'sin':
+            platform_option = conf_dict[0]['platform']
+            if conf_dict[2]['model'] == 'sin':
                 model = 'sinusoid'
-            elif conf_dict[3]['model'] == 'flashc':
+            elif conf_dict[2]['model'] == 'flashc':
                 model = 'flashcrowd'
             else:
                 model = 'stair_step'
@@ -204,7 +213,8 @@ def configure(app):
 
             return render_template('analysis-result.html',
                                    url_grafana=URL_GRAFANA,
-                                   dashboard_uid=dashboard_uid)
+                                   dashboard_uid=dashboard_uid,
+                                   platform=platform_option)
 
         except requests.exceptions.ConnectionError:
             flash("Connection API Fail!", "danger")
