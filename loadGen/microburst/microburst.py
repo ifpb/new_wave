@@ -87,7 +87,15 @@ def main():
 
     args = parser.parse_args()
 
-    logging.basicConfig(filename='microburst.log',level=logging.INFO)
+    if args.verbose is not None:
+        if args.verbose >= 1:
+            logging.basicConfig(filename='microburst.log',level=logging.DEBUG)
+            # setup logger
+            logger.debug("Enabling debug mode")
+
+        else:
+            # setup logger
+            logging.basicConfig(filename='microburst.log',level=logging.INFO)
 
     run(args)
 

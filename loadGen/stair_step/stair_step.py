@@ -31,7 +31,7 @@ command = [
            '--random',
            '--loop'
            ]
-log_file = '/home/vlc/logs/stair_step_wave.txt'
+log_file = '/home/vlc/logs/stair_step_wave.csv'
 
 num_client = 0
 
@@ -40,8 +40,8 @@ alive = deque([])
 # Start a process and stop it after args.length minutes
 def start_process(args, FNULL):
     logger = logging.getLogger("start")
-    
-    # Start a new process    
+
+    # Start a new process
     logger.info('Starting new process')
 
     global command
@@ -52,7 +52,7 @@ def start_process(args, FNULL):
     logger.info('Starting new process pid = %s' % (pid))
     global num_client
     num_client += 1
-        
+
     return pid
 
 
@@ -67,7 +67,7 @@ def terminate_process(pid):
     num_client -= 1
 
 def run(args):
-           
+
     # setup logger
     logger = logging.getLogger("run")
 
@@ -99,16 +99,21 @@ def run(args):
     sleep_secs = I # I is the interval between jumps, during this time the graph stays in a "plateau"
 
     # file used for create stair step wave graph
-    with open(log_file,'w+') as file:
-        file.write(str(num_client) + '\n')
+    with open(log_file, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Time', 'Instances'])
+        writer.writerow(
+            [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
     # until we finish
     while (now < end):
         logger.debug('Clients active = %s' % (num_client))
         
         for _ in range(int(sleep_secs)):
-            with open(log_file,'a+') as file:
-                file.write(str(num_client) + '\n')
+            with open(log_file, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(
+                    [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
         time.sleep(sleep_secs)
         
@@ -118,22 +123,26 @@ def run(args):
                 last_pid = start_process(args, FNULL)
                 alive.append(last_pid)
                 #last_pid.wait()
-                with open(log_file,'a+') as file:
-                    file.write(str(num_client) + '\n')
+                with open(log_file, mode='a', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(
+                        [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
         else:
             for _ in range(min(J, num_client)):
                 #logger.info("Killing a process")
                 terminate_process(alive[0])
                 alive.popleft()
-                with open(log_file,'a+') as file:
-                    file.write(str(num_client) + '\n')
+                with open(log_file, mode='a', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(
+                        [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
         # refresh the timer
         now = datetime.datetime.now()
 
-    
+
 def main():
-    
+
     logger = logging.getLogger("main")
 
     parser = argparse.ArgumentParser()
@@ -167,6 +176,6 @@ def main():
         terminate_process(pids)
 
 
-# hook for the main function 
+# hook for the main function
 if __name__ == '__main__':
     main()
