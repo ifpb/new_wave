@@ -1,15 +1,16 @@
-
 services:
   apache:
     image: ghcr.io/matheusfael/wave/apache
     container_name: server
-      #ports:
-      #- "80:80"
+    #ports:
+    #- "80:80"
 
   client_container:
     image: ghcr.io/danilocb21/wave-vlc:latest
     container_name: client
     command: [ "tail", "-f", "/dev/null" ] 
+    privileged: true
+    network_mode: "host"
     #environment:
       #- DISPLAY=${DISPLAY}
     volumes:
