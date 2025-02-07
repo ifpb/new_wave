@@ -2,13 +2,13 @@
 services:
   apache:
     image: ghcr.io/matheusfael/wave/apache
-    container_name: wave_apache
+    container_name: server
       #ports:
       #- "80:80"
 
   client_container:
-    image: ghcr.io/matheusfael/wave/vlc
-    container_name: wave_vlc
+    image: ghcr.io/danilocb21/wave-vlc:latest
+    container_name: client
     command: [ "tail", "-f", "/dev/null" ] 
     #environment:
       #- DISPLAY=${DISPLAY}

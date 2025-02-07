@@ -25,4 +25,4 @@ build/
 .flake8
 
 */app/provision/config.yaml
-*/app/provision/logs/*.csv
+*/app/provision/logs/*

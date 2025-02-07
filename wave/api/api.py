@@ -62,7 +62,7 @@ class ProvisionInit(Resource):
             while not config_dir.joinpath('logs/ready.txt').exists():
                 time.sleep(2)
         else:
-            time.sleep(2) # temporary fix for docker not executing
+            time.sleep(4) # temporary fix for docker not executing
 
         return {'provision': 'up'}
 

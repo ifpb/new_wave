@@ -38,11 +38,11 @@ class Provision:
         # Execute scenarios based on user input
         if args[1] == "docker":
             if args[0] == 'sin':
-                command = f"""docker exec -it wave_vlc ./run_wave.sh -l sinusoid {args[2]} {args[3]} {args[4]} {args[5]}"""
+                command = f"""docker exec -it client ./run_wave.sh -l sinusoid {args[2]} {args[3]} {args[4]} {args[5]}"""
             elif args[0] == "step":
-                command = f"""docker exec -it wave_vlc ./run_wave.sh -l stair_step {args[2]} {args[3]} {args[4]}"""
+                command = f"""docker exec -it client ./run_wave.sh -l stair_step {args[2]} {args[3]} {args[4]}"""
             elif args[0] == "flashc":
-                command = f"""docker exec -it wave_vlc ./run_wave.sh -l flashcrowd {args[2]} {args[3]} {args[4]}"""
+                command = f"""docker exec -it client ./run_wave.sh -l flashcrowd {args[2]} {args[3]} {args[4]}"""
             else:
                 return "Invalid scenario. Use: 'sin', 'step' or 'flashc'."
         else:
@@ -58,7 +58,7 @@ class Provision:
     
     def run_microburst(self, *args):
         if args[0] == "docker":
-            command = f"""docker exec -it wave_vlc './run_microburst.sh -l {args[1]} {args[2]}'"""
+            command = f"""docker exec -it client 'sudo ./run_microburst.sh -l {args[1]} {args[2]}'"""
         else:
             command = f"""vagrant ssh client -c './wave/run_microburst.sh -l {args[1]} {args[2]}'"""
 
