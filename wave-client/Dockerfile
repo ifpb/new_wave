@@ -1,0 +1,24 @@
+FROM debian:latest
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-scapy vlc sudo
+
+ENV HOME=/home/vlc
+
+RUN groupadd -f video && \
+    useradd -m -d $HOME vlc && \
+    usermod -aG video,sudo vlc && \
+    echo "vlc ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vlc && \
+    chmod 0440 /etc/sudoers.d/vlc
+
+WORKDIR $HOME
+
+COPY . /home/vlc
+
+RUN mkdir -p $HOME/logs && chown -R vlc:vlc $HOME/logs && chmod -R +777 $HOME/logs
+
+RUN chown -R vlc:vlc $HOME
+
+USER vlc
+
+CMD [ "/home/vlc/startup.sh" ]

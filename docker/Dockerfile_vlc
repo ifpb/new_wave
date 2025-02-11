@@ -15,7 +15,7 @@ WORKDIR $HOME
 
 COPY . /home/vlc
 
-RUN mkdir -p $HOME/logs && chown -R vlc:vlc $HOME/logs && chmod -R 777 $HOME/logs
+RUN mkdir -p $HOME/logs && chown -R vlc:vlc $HOME/logs && chmod -R +777 $HOME/logs
 
 RUN chown -R vlc:vlc $HOME
 
