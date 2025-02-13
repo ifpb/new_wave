@@ -202,7 +202,7 @@ def configure(app):
             else:
                 model = 'stair_step'
             resquest_gr = requests.get(
-                f"""{URL_API}/grafana/config?host_promts={conf_dict[0]['ip']}&wave_model={model}""")
+                f"""{URL_API}/grafana/config?host_promts={conf_dict[0]['ip']}&wave_model={model}&platform={platform_option}""")
 
             config_gr = resquest_gr.json()
 

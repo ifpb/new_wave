@@ -49,6 +49,8 @@ parser_config_grafana.add_argument(
     'host_promts', type=str, help='IP Host runner Promethues')
 parser_config_grafana.add_argument(
     'wave_model', type=str, help='Wave model')
+parser_config_grafana.add_argument(
+    'platform', type=str, help='Platform')
 
 
 @api.route('/provision/up')
@@ -71,6 +73,7 @@ class ProvisionGrafana(Resource):
         # conf Grafana
         host_promts = parser_config_grafana.parse_args()['host_promts']
         wave_model = parser_config_grafana.parse_args()['wave_model']
+        platform = parser_config_grafana.parse_args()['platform']
 
         api_key = generateAPIKey.create_api_key_grf()
 
@@ -82,7 +85,7 @@ class ProvisionGrafana(Resource):
             api_key, 'csv')['uid']
 
         dashboard_uid = createDashboard.create_dashboard(
-            api_key, promts_data_src_uid, csv_data_src_uid)
+            api_key, promts_data_src_uid, csv_data_src_uid, platform)
 
         response = {
             'provision': 'executed',
