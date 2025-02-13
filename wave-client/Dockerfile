@@ -20,7 +20,7 @@ WORKDIR /home/vlc
 
 COPY --chown=vlc:vlc . /home/vlc
 
-RUN mkdir -p /home/vlc/logs && chmod 777 /home/vlc/logs
+RUN mkdir -p /home/vlc/logs && chmod -R +777 /home/vlc/logs
 
 USER vlc
 
