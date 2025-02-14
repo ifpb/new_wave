@@ -715,7 +715,9 @@ def create_dashboard(api_key, promts_data_src_uid, csv_data_src_uid, platform):
         response_dashb = requests.get(
             f"{URL_API_DASHBOARD}/uid/{DASHBOARD_UID}", headers=headers)
         if response_dashb.status_code == 200:
-            return DASHBOARD_UID
+            if response_dashb.json():
+                update_dashboard(URL_API_DASHBOARD, headers, data)
+                return DASHBOARD_UID
 
     response = requests.post(
         f"{URL_API_DASHBOARD}/db", headers=headers, data=json.dumps(data))
@@ -728,5 +730,15 @@ def create_dashboard(api_key, promts_data_src_uid, csv_data_src_uid, platform):
         set_key(ENV_PATH, "DASHBOARD_UID", f'{dashb_uid}',
                 quote_mode='always', export=False, encoding='utf-8')
         return dashb_uid
+    else:
+        return response.json()
+
+def update_dashboard(url, headers, data):
+    data["overwrite"] = True
+    response = requests.post(f'{url}/db',
+                            headers=headers,
+                            data=json.dumps(data))
+    if response.status_code == 200:
+        response.json()['uid']
     else:
         return response.json()
