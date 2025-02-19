@@ -442,32 +442,12 @@ data_docker = {
                         "transform": "negative-Y"
                     },
                     {
-                        "alias": "/.*lo.*/",
+                        "alias": "/.*Transmit.*/",
                         "color": "#7EB26D"
                     },
                     {
-                        "alias": "/.*eth0.*/",
+                        "alias": "/.*Receive.*/",
                         "color": "#EAB839"
-                    },
-                    {
-                        "alias": "/.*eth1.*/",
-                        "color": "#6ED0E0"
-                    },
-                    {
-                        "alias": "/.*eth2.*/",
-                        "color": "#EF843C"
-                    },
-                    {
-                        "alias": "/.*eth3.*/",
-                        "color": "#E24D42"
-                    },
-                    {
-                        "alias": "/.*eth4.*/",
-                        "color": "#1F78C1"
-                    },
-                    {
-                        "alias": "/.*eth5.*/",
-                        "color": "#BA43A9"
                     }
                 ],
                 "spaceLength": 10,
@@ -481,10 +461,10 @@ data_docker = {
                             "uid": "Prometheus"
                         },
                         "editorMode": "code",
-                        "expr": "irate(node_network_receive_bytes_total{instance=~\"$instance\"}[5m])",
+                        "expr": "irate(container_network_receive_bytes_total{name=~\"server|client\"}[5m])",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{device}} - Receive",
+                        "legendFormat": "{{name}} {{interface}} - Receive",
                         "range": True,
                         "refId": "O",
                         "step": 4
@@ -495,10 +475,10 @@ data_docker = {
                             "uid": "Prometheus"
                         },
                         "editorMode": "code",
-                        "expr": "irate(node_network_transmit_bytes_total{instance=~\"$instance\"}[5m])",
+                        "expr": "irate(container_network_transmit_bytes_total{name=~\"server|client\"}[5m])",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{device}} - Transmit",
+                        "legendFormat": "{{name}} {{interface}} - Transmit",
                         "range": True,
                         "refId": "P",
                         "step": 4

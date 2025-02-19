@@ -75,10 +75,12 @@ class ProvisionGrafana(Resource):
         wave_model = parser_config_grafana.parse_args()['wave_model']
         platform = parser_config_grafana.parse_args()['platform']
 
+        prometheus_url = host_promts if platform == "vm" else "prometheus"
+
         api_key = generateAPIKey.create_api_key_grf()
 
         promts_data_src_uid = createDataSources.create_data_src(
-            f'http://{host_promts}:9090', api_key, 'prometheus')['uid']
+            f'http://{prometheus_url}:9090', api_key, 'prometheus')['uid']
 
         csv_data_src_uid = createDataSources.create_data_src(
             f'/var/lib/grafana/csv/{wave_model}_wave.csv',

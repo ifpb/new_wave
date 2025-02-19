@@ -3,7 +3,6 @@
 <div class="m-3" style="min-height: 410px">
   <h3 class="text-center">Analysis Result</h3>
   <div class="row mr-4">
-    {% if platform != 'docker' %}
     <div class="col-sm-6">
       <div class="row g-3">
         <iframe
@@ -14,8 +13,7 @@
         ></iframe>
       </div>
     </div>
-    {% endif %}
-    <div class="col-sm-{{ '12' if platform == 'docker' else '6' }}">
+    <div class="col-sm-6">
       <div class="row g-3">
         <iframe
           class="mb-3"
