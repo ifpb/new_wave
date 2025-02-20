@@ -1,5 +1,4 @@
-#!/usr/local/bin/python2.7
-# encoding: utf-8
+#!/usr/bin/env python3
 '''
 Created on Sept 21, 2018
 
@@ -37,21 +36,23 @@ num_client = 0
 alive = deque([])
 
 # Start a process and stop it after args.length minutes
+
+
 def start_process(args, FNULL):
     logger = logging.getLogger("start")
-    
-    # Start a new process    
+
+    # Start a new process
     logger.info('Starting new process')
 
     global command
     eff_command = command + [args.playlist]
-    #eff_command = command
+    # eff_command = command
 
     pid = subprocess.Popen(eff_command, stderr=subprocess.STDOUT)
     logger.info('Starting new process pid = %s' % (pid))
     global num_client
     num_client += 1
-        
+
     return pid
 
 
@@ -61,11 +62,13 @@ def terminate_process(pid):
     logger = logging.getLogger("terminate")
     logger.info('Terminating process pid = %s' % (pid))
     pid.kill()
-    #pid.wait()
+    # pid.wait()
     global num_client
     num_client -= 1
 
+
 def run(args):
+
     # setup logger
     logger = logging.getLogger("run")
 
@@ -79,16 +82,17 @@ def run(args):
     # sinusoidal function
     if args.sinusoid:
         A, T = args.sinusoid.split(',')
-        
-        # The angular frequency is a scalar measure of rotation rate.
-        # One revolution is equal to 2 radians, hence omega = 2/T where
+
+        # The angular frequency  is aa scalar measure of rotation rate.
+        # One revolution is equal to 2 radians, hence  = 2/T where
         # T is the period (measured in seconds),
         omega = 2.0 * math.pi / (float(T) * 60.0)
         A = float(A)
-        logger.info('Using sine wave function with A=%f period=%f' % (A, omega))
+        logger.info('Using sine wave function with A=%f period=%f' %
+                    (A, omega))
 
         # the amplitude must be smaller than the lambda
-        assert(A < args.lambd)
+        assert (A < args.lambd)
 
     # general lambda
     lambd = args.lambd
@@ -98,94 +102,121 @@ def run(args):
     num_client = 0
 
     global alive
-    alive = []
 
     # used to define poisson interarrival times - time to sleep in between processes
     global sleep_secs
 
-    # file used for create sinusoid wave graph
-    with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'w+') as file:
-        file.write(str(num_client) + '\n')
+    #   file used for create sinusoid wave graph
+    with open('/home/vlc/logs/sinusoid_wave.csv',
+              mode='w', newline='') as file:
 
+        writer = csv.writer(file)
+        writer.writerow(['Time', 'Instances'])
+        writer.writerow(
+            [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
     # until we finish
-    while now < end:
-        
+    while (now < end):
+
         if args.sinusoid:
             # The sine wave or sinusoid is a mathematical curve that describes
             # a smooth repetitive oscillation.
             # Its most basic form as a function of time (t) is:
-            # y(t) = A * sin(2ft + phase) = A * sin(t + phase)
+            # y(t) = A * sin(2ft + ) = A * sin(t + )
             # where:
-            # - phase is the phase (equal to 0)
-            # - omega is evaluated at the previous step
-            lambd = args.lambd + A * math.sin(omega * (now - start).total_seconds()) 
+            #  -  is the phase (equal to 0)
+            #  -  is evaluated at the previous step
+            lambd = args.lambd + A * \
+                math.sin(omega * (now - start).total_seconds())
 
         # Poisson process:
         # The time between each pair of consecutive events has an exponential
-        # distribution with parameter lambda and each of these inter-arrival times
+        # distribution with parameter  and each of these inter-arrival times
         # is assumed to be independent of other inter-arrival times.
         if args.poisson:
             sleep_secs = random.expovariate(lambd / 60.0)
 
         logger.debug('%s - Will sleep for %s sec' % (now, sleep_secs))
-        logger.debug('Clients active = %s - lambda = %s' % (num_client, math.ceil(lambd)))
-        
+        logger.debug('Clients active = %s - lambda = %s' %
+                     (num_client, math.ceil(lambd)))
+
         for i in range(int(sleep_secs)):
-            with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'a+') as file:
-                file.write(str(num_client) + '\n')
-        
+            with open('/home/vlc/logs/sinusoid_wave.csv',
+                      mode='a', newline='') as file:
+
+                writer = csv.writer(file)
+
+                writer.writerow(
+                    [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
+                # file.write(str(num_client) + '\n')
+
         time.sleep(sleep_secs)
-    
+
         if num_client < math.ceil(lambd):
             # logger.info("Generating new process")
             last_pid = start_process(args, FNULL)
             alive.append(last_pid)
             # last_pid.wait()
-            with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'a+') as file:
-                file.write(str(num_client) + '\n')
+            with open('/home/vlc/logs/sinusoid_wave.csv',
+                      mode='a', newline='') as file:
+                writer = csv.writer(file)
+
+                writer.writerow(
+                    [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
+                # file.write(str(num_client) + '\n')
 
         if num_client > math.ceil(lambd):
             # logger.info("Killing a process")
             terminate_process(alive[0])
-            alive.pop(0)
-            with open('/vagrant/scapy/logs/sinusoid_wave.txt', 'a+') as file:
-                file.write(str(num_client) + '\n')
+            alive.popleft()
+            with open('/home/vlc/logs/sinusoid_wave.csv',
+                      mode='a', newline='') as file:
+                writer = csv.writer(file)
+
+                writer.writerow(
+                    [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
         # refresh the timer
         now = datetime.datetime.now()
 
-    
+
 def main():
-    
+
     logger = logging.getLogger("main")
 
     parser = argparse.ArgumentParser()
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
-    parser.add_argument('-V', '--version', action='version', version='%%(prog)s %s (%s)' % (program_version, program_build_date))
-    parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
-    parser.add_argument("-s", "--sinusoid", dest="sinusoid", metavar='A,P', help="set the sinusoidal lambda behavior, that varies with amplitude A on period P minutes around the lambda")
-    parser.add_argument("-l", "--playlist", dest="playlist", help="Set the playlist for the clients", required=True)
+    parser.add_argument('-V', '--version', action='version',
+                        version='%%(prog)s %s (%s)' % (program_version, program_build_date))
+    parser.add_argument("-v", "--verbose", dest="verbose", action="count",
+                        help="set verbosity level [default: %(default)s]")
+    parser.add_argument("-s", "--sinusoid", dest="sinusoid", metavar='A,P',
+                        help="set the sinusoidal lambda behavior, that varies with amplitude A on period P minutes around the lambda")
+    parser.add_argument("-l", "--playlist", dest="playlist",
+                        help="Set the playlist for the clients", required=True)
 
     parser.add_argument('--poisson', dest='poisson', action='store_true')
     parser.add_argument('--no-poisson', dest='poisson', action='store_false')
     parser.set_defaults(poisson=True)
 
     # positional arguments (duration, lambda)
-    parser.add_argument("duration", type=float, help="set the duration of the experiment in minutes")
-    parser.add_argument("lambd", type=float, help="set the (average) arrival rate of lambda clients/minute or normal level of functioning Rnorm for flash crowd")
+    parser.add_argument("duration", type=float,
+                        help="set the duration of the experiment in minutes")
+    parser.add_argument(
+        "lambd", type=float, help="set the (average) arrival rate of lambda clients/minute or normal level of functioning Rnorm for flash crowd")
 
     # Process arguments
     args = parser.parse_args()
 
-    if args.verbose >= 1:
-        logging.basicConfig(filename='sinusoid.log',level=logging.DEBUG)
-        # setup logger
-        logger.debug("Enabling debug mode")
+    if args.verbose is not None:
+        if args.verbose >= 1:
+            logging.basicConfig(filename='sinusoid.log', level=logging.DEBUG)
+            # setup logger
+            logger.debug("Enabling debug mode")
 
-    else:
-        # setup logger
-        logging.basicConfig(filename='sinusoid.log',level=logging.INFO)
+        else:
+            # setup logger
+            logging.basicConfig(filename='sinusoid.log', level=logging.INFO)
 
     # main loop
     run(args)
@@ -194,6 +225,6 @@ def main():
         terminate_process(pids)
 
 
-# hook for the main function 
+# hook for the main function
 if __name__ == '__main__':
     main()

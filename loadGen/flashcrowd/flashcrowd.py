@@ -26,7 +26,7 @@ command = [
            'vlc',
            '-I',
            'dummy',
-           '--zoom=0.25',
+           '--zoom=0.5',
            '--adaptive-logic=rate',
            '--random',
            '--loop',
@@ -41,24 +41,29 @@ alive = deque([])
 alive_Rnorm = deque([])
 
 # Start a process and stop it after args.length minutes
+
+
 def start_process(args):
 
     logger = logging.getLogger("start")
-    
-    # Start a new process    
+
+    # Start a new process
     logger.info('Starting new process')
 
     global command
-    eff_command = command + [args.playlist]
-    
+    # eff_command = command + [args.playlist]
+    eff_command = command
+
     pid = subprocess.Popen(eff_command, stderr=subprocess.STDOUT)
     logger.info('Starting new process pid = %s' % (pid))
     global num_client
     num_client += 1
-        
+
     return pid
 
 # Terminate the process
+
+
 def terminate_process(pid):
 
     # setup logger
@@ -68,12 +73,14 @@ def terminate_process(pid):
     global num_client
     num_client -= 1
 
+
 def run(args):
 
     # setup logger
     logger = logging.getLogger("run")
 
-    Rnorm,S,n = args.flashcrowd.split(',') # shock_level used was equal 20 and n equal 4
+    # shock_level used was equal 20 and n equal 4
+    Rnorm, S, n = args.flashcrowd.split(',')
     # same values used on the paper "Managing flash crowds on the Internet", available in: https://ieeexplore.ieee.org/document/1240667
     Rnorm = int(Rnorm)
     S = int(S)
@@ -87,14 +94,19 @@ def run(args):
     global alive
     global alive_Rnorm
 
-     #   file used for create flashcrowd wave graph
-    with open('/vagrant/scapy/logs/flashcrowd_wave.txt','w+') as file:
-        file.write(str(num_client) + '\n')
+    #   file used for create flashcrowd wave graph
+    with open('/home/vlc/logs/flashcrowd_wave.csv',
+              mode='w', newline='') as file:
+
+        writer = csv.writer(file)
+        writer.writerow(['Time', 'Instances'])
+        writer.writerow(
+            [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
     # Rflash is a peak of a flash event. Rnorm is a normal load.
     # Shock_level defines the order of magnitude increase in the load.
-    # Rflash is defined by equation: (Rnorm * Shock_level) - Rnorm 
-    # flashcrowd phenomenon is modeled by three parts: 
+    # Rflash is defined by equation: (Rnorm * Shock_level) - Rnorm
+    # flashcrowd phenomenon is modeled by three parts:
     # ramp-up / sustained / ramp-down
     #       1) ramp-up is defined by equation: 1 / log10(1 + Shock_level)
     #       2) sustained is defined by equation:   log10(1 + Shock_level)
@@ -108,7 +120,7 @@ def run(args):
     sustained = math.log10(1 + S)
     st_sleep = sustained*60
 
-    rampdown = n * math.log10(1 + S) 
+    rampdown = n * math.log10(1 + S)
     rd_sleep = (rampdown*60) / Rflash
 
     for i in range(Rnorm):
@@ -116,25 +128,40 @@ def run(args):
         rnorm_command = command + [args.playlist]
         pid_Rnorm = subprocess.Popen(rnorm_command, stderr=subprocess.STDOUT)
         alive_Rnorm.append(pid_Rnorm)
-        
-        with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
-            file.write(str(num_client) + '\n')
+
+        with open('/home/vlc/logs/flashcrowd_wave.csv',
+                  mode='a', newline='') as file:
+
+            writer = csv.writer(file)
+
+            writer.writerow(
+                [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
     # rumpup phase
     while num_client < Rflash:
         last_pid = start_process(args)
         alive.append(last_pid)
-        
+
         for i in range(int(ru_sleep)):
-            with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
-                file.write(str(num_client) + '\n')
+            with open('/home/vlc/logs/flashcrowd_wave.csv',
+                      mode='a', newline='') as file:
+
+                writer = csv.writer(file)
+
+                writer.writerow(
+                    [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
         time.sleep(ru_sleep)
 
     # sustained phase
     for i in range(int(st_sleep)):
-            with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
-                file.write(str(num_client) + '\n')
+        with open('/home/vlc/logs/flashcrowd_wave.csv',
+                  mode='a', newline='') as file:
+
+            writer = csv.writer(file)
+
+            writer.writerow(
+                [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
 
     time.sleep(st_sleep)
 
@@ -144,15 +171,20 @@ def run(args):
         alive.popleft()
 
         for i in range(int(rd_sleep)):
-            with open('/vagrant/scapy/logs/flashcrowd_wave.txt','a+') as file:
-                file.write(str(num_client) + '\n')
+            with open('/home/vlc/logs/flashcrowd_wave.csv',
+                      mode='a', newline='') as file:
 
+                writer = csv.writer(file)
+
+                writer.writerow(
+                    [datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), str(num_client)])
         time.sleep(rd_sleep)
 
     # kill instances from Rnorm load
     for i in range(Rnorm):
         terminate_process(alive_Rnorm[0])
         alive_Rnorm.popleft()
+
 
 def main():
 
@@ -162,18 +194,23 @@ def main():
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
 
-    parser.add_argument('-V', '--version', action='version', version='%%(prog)s %s (%s)' % (program_version, program_build_date))
-    parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
-    parser.add_argument("-f", "--flashcrowd", dest="flashcrowd", metavar='Rnorm,S,n', help="set the flashcrowd behavior, that varies with Rnorm (normal load), S (shock_level) and n (constant used in rampdown)")
-    parser.add_argument("-l", "--playlist", dest="playlist", help="Set the playlist for the clients", required=True)
+    parser.add_argument('-V', '--version', action='version',
+                        version='%%(prog)s %s (%s)' % (program_version, program_build_date))
+    parser.add_argument("-v", "--verbose", dest="verbose", action="count",
+                        help="set verbosity level [default: %(default)s]")
+    parser.add_argument("-f", "--flashcrowd", dest="flashcrowd", metavar='Rnorm,S,n',
+                        help="set the flashcrowd behavior, that varies with Rnorm (normal load), S (shock_level) and n (constant used in rampdown)")
+    parser.add_argument("-l", "--playlist", dest="playlist",
+                        help="Set the playlist for the clients", required=True)
 
     args = parser.parse_args()
-     
+
     run(args)
 
     for pids in alive:
         terminate_process(pids)
 
-# hook for the main function 
+
+# hook for the main function
 if __name__ == '__main__':
     main()

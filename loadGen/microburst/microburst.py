@@ -6,6 +6,9 @@ Created on Oct 6, 2024
 @author: danilocb21
 '''
 
+__version__ = 0.1
+__updated__ = '2024-12-10'
+
 from scapy.all import *
 import string
 import random
@@ -46,16 +49,16 @@ def run(args):
     now = datetime.datetime.now()
     end = now + datetime.timedelta(minutes=duration)
 
-    src_ip = args.source_ip # Origem dos pacotes
-    dst_ip = args.destination_ip # Destino dos pacotes
+    src_ip = args.source_ip # Packets Source
+    dst_ip = args.destination_ip # Packets Destiny
 
-    # se nenhuma origem for passada, utiliza-se
-    # o endereço IP da sua máquina
+    # If no src_ip is passed,
+    # it's used the ip from the local machine
     if src_ip is None:
         src_ip = get_if_addr(conf.iface)
 
     while now < end:
-        num_pkts = random.randint(10, 100) # Posso passar esses valores como parametro também
+        num_pkts = random.randint(10, 100)
         packet_interval = random.uniform(0.01, 0.1) # seconds
         packets = generate_packets(src_ip, dst_ip, num_pkts)
 
@@ -73,13 +76,26 @@ def main():
     logger = logging.getLogger("main")
 
     parser = argparse.ArgumentParser()
+    program_version = "v%s" % __version__
+    program_build_date = str(__updated__)
+    
+    parser.add_argument('-V', '--version', action='version', version='%%(prog)s %s (%s)' % (program_version, program_build_date))
+    parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
     parser.add_argument("-s", "--source_ip", dest="source_ip", help="set the source IP of the microburst")
     parser.add_argument("-d", "--destination_ip", dest="destination_ip", help="set the destination IP of the microburst", required=True)
     parser.add_argument("duration", type=float, help="set the duration of the experiment in minutes")
 
     args = parser.parse_args()
 
-    logging.basicConfig(filename='microburst.log',level=logging.INFO)
+    if args.verbose is not None:
+        if args.verbose >= 1:
+            logging.basicConfig(filename='microburst.log',level=logging.DEBUG)
+            # setup logger
+            logger.debug("Enabling debug mode")
+
+        else:
+            # setup logger
+            logging.basicConfig(filename='microburst.log',level=logging.INFO)
 
     run(args)
 

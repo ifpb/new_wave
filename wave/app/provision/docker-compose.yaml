@@ -1,0 +1,19 @@
+services:
+  apache:
+    image: ghcr.io/matheusfael/wave/apache
+    container_name: server
+    #ports:
+    #- "80:80"
+
+  client_container:
+    image: ghcr.io/danilocb21/wave-vlc:latest
+    container_name: client
+    privileged: true
+    #environment:
+      #- DISPLAY=${DISPLAY}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./logs:/home/vlc/logs
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+      - apache
