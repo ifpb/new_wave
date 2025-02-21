@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # ./app-compose.sh <option>[--start|--destroy]
 
 OPTION=$1
 
-if [ -f /etc/os-release ]; then
+if command -v ip &> /dev/null; then
+  IP=$(ip route get 1.1.1.1 | awk '{print $7}')
+elif [ -f /etc/os-release ]; then
     source /etc/os-release
     if [[ "$ID" == "arch" ]]; then
         IP=$(hostname -i | awk '{print $1}')
