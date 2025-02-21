@@ -1,7 +1,8 @@
-import os
 import json
+import os
+
 import requests
-from dotenv import load_dotenv, set_key, get_key
+from dotenv import get_key, load_dotenv, set_key
 from paths import ENV_PATH
 
 load_dotenv(dotenv_path=ENV_PATH)
@@ -441,14 +442,6 @@ data_docker = {
                         "alias": "/.*Trans.*/",
                         "transform": "negative-Y"
                     },
-                    {
-                        "alias": "/.*Transmit.*/",
-                        "color": "#7EB26D"
-                    },
-                    {
-                        "alias": "/.*Receive.*/",
-                        "color": "#EAB839"
-                    }
                 ],
                 "spaceLength": 10,
                 "stack": False,
