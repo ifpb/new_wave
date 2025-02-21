@@ -573,7 +573,7 @@ data_docker = {
                     "x": 0,
                     "y": 0
                 },
-                "id": None,
+                "id": 2,
                 "options": {
                     "legend": {
                         "calcs": [],
@@ -614,6 +614,226 @@ data_docker = {
                 "title": "Instances VLC",
                 "transparent": True,
                 "type": "timeseries"
+            },
+            {
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                "color": {
+                    "mode": "palette-classic"
+                },
+                "custom": {
+                    "axisBorderShow": False,
+                    "axisCenteredZero": False,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "drawStyle": "line",
+                    "fillOpacity": 15,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                    "legend": False,
+                    "tooltip": False,
+                    "viz": False
+                    },
+                    "insertNulls": False,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                    "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "spanNulls": False,
+                    "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                    "mode": "off"
+                    }
+                },
+                "mappings": [],
+                "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                    {
+                        "color": "green",
+                        "value": None
+                    },
+                    {
+                        "color": "red",
+                        "value": 80
+                    }
+                    ]
+                },
+                "unit": "decbytes"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 3,
+            "options": {
+                "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": True
+                },
+                "tooltip": {
+                "maxHeight": 600,
+                "mode": "single",
+                "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "cedoc1prtq0w0b"
+                },
+                "disableTextWrap": False,
+                "editorMode": "builder",
+                "expr": "container_memory_usage_bytes{id=\"/\"}",
+                "fullMetaSearch": False,
+                "includeNullMetadata": True,
+                "instant": False,
+                "interval": "",
+                "legendFormat": "Memory usage",
+                "range": True,
+                "refId": "A",
+                "useBackend": False
+                }
+            ],
+            "title": "Memory Usage",
+            "type": "timeseries"
+            },
+            {
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                "color": {
+                    "mode": "palette-classic"
+                },
+                "custom": {
+                    "axisBorderShow": False,
+                    "axisCenteredZero": False,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                    "legend": False,
+                    "tooltip": False,
+                    "viz": False
+                    },
+                    "insertNulls": False,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                    "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "spanNulls": False,
+                    "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                    "mode": "off"
+                    }
+                },
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                    "mode": "percentage",
+                    "steps": [
+                    {
+                        "color": "green",
+                        "value": None
+                    },
+                    {
+                        "color": "red",
+                        "value": 50
+                    }
+                    ]
+                },
+                "unit": "percent"
+                },
+                "overrides": [
+                {
+                    "matcher": {
+                    "id": "byName",
+                    "options": "CPU usage over time"
+                    },
+                    "properties": [
+                    {
+                        "id": "color",
+                        "value": {
+                        "fixedColor": "semi-dark-yellow",
+                        "mode": "fixed"
+                        }
+                    }
+                    ]
+                }
+                ]
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 4,
+            "options": {
+                "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": True
+                },
+                "tooltip": {
+                "maxHeight": 600,
+                "mode": "single",
+                "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "cedoox9vbmvi8a"
+                },
+                "disableTextWrap": False,
+                "editorMode": "builder",
+                "expr": "rate(container_cpu_usage_seconds_total{id=\"/\"}[$__rate_interval])",
+                "fullMetaSearch": False,
+                "includeNullMetadata": False,
+                "instant": False,
+                "legendFormat": "CPU usage over time",
+                "range": True,
+                "refId": "A",
+                "useBackend": False
+                }
+            ],
+            "title": "CPU usage",
+            "type": "timeseries"
             }
         ],
         "refresh": "5s",
