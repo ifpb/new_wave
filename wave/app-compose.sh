@@ -23,11 +23,12 @@ fi
 
 case $OPTION in
         "--start")
-                if [ ! -f /etc/vbox/networks.conf ]; then
-                    # Allow all IP ranges to be used in VM creation
-                    sudo mkdir /etc/vbox/
-                    echo '* 0.0.0.0/0 ::/0' | sudo tee /etc/vbox/networks.conf > /dev/null
-                fi
+                # if [ ! -f /etc/vbox/networks.conf ]; then
+                #     # Allow all IP ranges to be used in VM creation
+                #     sudo mkdir /etc/vbox/
+                #     echo '* 0.0.0.0/0 ::/0' | sudo tee /etc/vbox/networks.conf > /dev/null
+                # fi
+
                 #echo -e '📺  Activating xhost ...'
                 #xhost +local:* > /dev/null
                 echo -e '🐳  Building containers ...'
