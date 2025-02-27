@@ -57,6 +57,7 @@ def run(args):
     if src_ip is None:
         src_ip = get_if_addr(conf.iface)
 
+    lambda_rate = 0.5
     while now < end:
         num_pkts = random.randint(10, 100)
         packet_interval = random.uniform(0.01, 0.1) # seconds
@@ -66,7 +67,7 @@ def run(args):
 
         send_burst(packets, packet_interval)
 
-        burst_interval = random.uniform(0.1, 2) # seconds
+        burst_interval = random.expovariate(lambda_rate) # seconds
         time.sleep(burst_interval)
         now = datetime.datetime.now()
         
