@@ -1,12 +1,12 @@
 services:
   apache:
-    image: ghcr.io/matheusfael/wave/apache
+    image: ghcr.io/ifpb/new_wave/wave-apache
     container_name: server
     #ports:
     #- "80:80"
 
   client_container:
-    image: ghcr.io/danilocb21/wave-vlc:latest
+    image: ghcr.io/ifpb/new_wave/wave-vlc
     container_name: client
     privileged: true
     #environment:

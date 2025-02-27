@@ -36,15 +36,15 @@ case $OPTION in
                 echo -e '🐳  Starting containers ...'
                 docker compose up -d > /dev/null
                 echo -e '🚀  container started successfully!'
-                docker pull ghcr.io/danilocb21/wave-vlc:latest
-                docker pull ghcr.io/matheusfael/wave/apache
+                docker pull ghcr.io/ifpb/new_wave/wave-vlc
+                docker pull ghcr.io/ifpb/new_wave/wave-apache
                 echo "🕒 Initilize API Provision ... "
                 bash start-api.sh
                 ;;
         "--destroy")
                 echo -e '🔴  Destroying containers and images ...'
                 docker compose down --rmi all
-                docker rmi -f ghcr.io/danilocb21/wave-vlc ghcr.io/matheusfael/wave/apache > /dev/null
+                docker rmi -f ghcr.io/ifpb/new_wave/wave-vlc ghcr.io/ifpb/new_wave/wave-apache > /dev/null
                 cd app/provision
                 rm ./logs/* > /dev/null 2>&1
                 vagrant destroy -f > /dev/null
