@@ -1,10 +1,10 @@
 # WAVE - Multiple load generator for computer network experimentation
 
-[WAVE User Manual](Manual_do_Usuario_do_WAVE.pdf)
+[WAVE User Manual](WAVE_User_Manual.pdf)
 
-[Explanatory Video](https://www.youtube.com/watch?v=AOsvDJgxGQ8&ab_channel=JeffersonLucasFerreiradaSilva)
+[comment]: # [Explanatory Video](https://www.youtube.com/watch?v=AOsvDJgxGQ8&ab_channel=JeffersonLucasFerreiradaSilva)
 
-[Artigo Salão de Ferramentas SBRC 2023](https://doi.org/10.5753/sbrc_estendido.2023.712)
+[Salão de Ferramentas SBRC 2023 (previous work)](https://doi.org/10.5753/sbrc_estendido.2023.712)
 
 ## Checking the Required Requirements
 
