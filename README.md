@@ -2,8 +2,6 @@
 
 [WAVE User Manual](WAVE_User_Manual.pdf)
 
-[comment]: # [Explanatory Video](https://www.youtube.com/watch?v=AOsvDJgxGQ8&ab_channel=JeffersonLucasFerreiradaSilva)
-
 [Salão de Ferramentas SBRC 2023 (previous work)](https://doi.org/10.5753/sbrc_estendido.2023.712)
 
 ## Checking the Required Requirements
