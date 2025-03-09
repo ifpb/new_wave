@@ -3,7 +3,6 @@
 <div class="m-3" style="min-height: 410px">
   <h3 class="text-center">Analysis Result</h3>
   <div class="row mr-4">
-    {% if platform != 'docker' %}
     <div class="col-sm-6">
       <div class="row g-3">
         <iframe
@@ -14,12 +13,33 @@
         ></iframe>
       </div>
     </div>
-    {% endif %}
-    <div class="col-sm-{{ '12' if platform == 'docker' else '6' }}">
+    <div class="col-sm-6">
       <div class="row g-3">
         <iframe
           class="mb-3"
           src="{{ url_grafana }}/d-solo/{{ dashboard_uid }}/wave-analysis-results?orgId=1&refresh=5s&from=now-30m&to=now&panelId=2"
+          width="550"
+          height="350"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="row mr-4">
+    <div class="col-sm-6">
+      <div class="row g-3">
+        <iframe
+          class="mb-3"
+          src="{{ url_grafana }}/d-solo/{{ dashboard_uid }}/wave-analysis-results?orgId=1&refresh=5s&from=now-30m&to=now&panelId=3"
+          width="550"
+          height="350"
+        ></iframe>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="row g-3">
+        <iframe
+          class="mb-3"
+          src="{{ url_grafana }}/d-solo/{{ dashboard_uid }}/wave-analysis-results?orgId=1&refresh=5s&from=now-30m&to=now&panelId=4"
           width="550"
           height="350"
         ></iframe>

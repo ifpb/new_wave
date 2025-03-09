@@ -1,7 +1,8 @@
-import os
 import json
+import os
+
 import requests
-from dotenv import load_dotenv, set_key, get_key
+from dotenv import get_key, load_dotenv, set_key
 from paths import ENV_PATH
 
 load_dotenv(dotenv_path=ENV_PATH)
@@ -441,34 +442,6 @@ data_docker = {
                         "alias": "/.*Trans.*/",
                         "transform": "negative-Y"
                     },
-                    {
-                        "alias": "/.*lo.*/",
-                        "color": "#7EB26D"
-                    },
-                    {
-                        "alias": "/.*eth0.*/",
-                        "color": "#EAB839"
-                    },
-                    {
-                        "alias": "/.*eth1.*/",
-                        "color": "#6ED0E0"
-                    },
-                    {
-                        "alias": "/.*eth2.*/",
-                        "color": "#EF843C"
-                    },
-                    {
-                        "alias": "/.*eth3.*/",
-                        "color": "#E24D42"
-                    },
-                    {
-                        "alias": "/.*eth4.*/",
-                        "color": "#1F78C1"
-                    },
-                    {
-                        "alias": "/.*eth5.*/",
-                        "color": "#BA43A9"
-                    }
                 ],
                 "spaceLength": 10,
                 "stack": False,
@@ -481,10 +454,10 @@ data_docker = {
                             "uid": "Prometheus"
                         },
                         "editorMode": "code",
-                        "expr": "irate(node_network_receive_bytes_total{instance=~\"$instance\"}[5m])",
+                        "expr": "irate(container_network_receive_bytes_total{name=~\"server|client\"}[5m])",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{device}} - Receive",
+                        "legendFormat": "{{name}} - Receive",
                         "range": True,
                         "refId": "O",
                         "step": 4
@@ -495,10 +468,10 @@ data_docker = {
                             "uid": "Prometheus"
                         },
                         "editorMode": "code",
-                        "expr": "irate(node_network_transmit_bytes_total{instance=~\"$instance\"}[5m])",
+                        "expr": "irate(container_network_transmit_bytes_total{name=~\"server|client\"}[5m])",
                         "format": "time_series",
                         "intervalFactor": 2,
-                        "legendFormat": "{{device}} - Transmit",
+                        "legendFormat": "{{name}} - Transmit",
                         "range": True,
                         "refId": "P",
                         "step": 4
@@ -600,7 +573,7 @@ data_docker = {
                     "x": 0,
                     "y": 0
                 },
-                "id": None,
+                "id": 2,
                 "options": {
                     "legend": {
                         "calcs": [],
@@ -641,6 +614,226 @@ data_docker = {
                 "title": "Instances VLC",
                 "transparent": True,
                 "type": "timeseries"
+            },
+            {
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                "color": {
+                    "mode": "palette-classic"
+                },
+                "custom": {
+                    "axisBorderShow": False,
+                    "axisCenteredZero": False,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "drawStyle": "line",
+                    "fillOpacity": 15,
+                    "gradientMode": "none",
+                    "hideFrom": {
+                    "legend": False,
+                    "tooltip": False,
+                    "viz": False
+                    },
+                    "insertNulls": False,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                    "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "spanNulls": False,
+                    "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                    "mode": "off"
+                    }
+                },
+                "mappings": [],
+                "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                    {
+                        "color": "green",
+                        "value": None
+                    },
+                    {
+                        "color": "red",
+                        "value": 80
+                    }
+                    ]
+                },
+                "unit": "decbytes"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 3,
+            "options": {
+                "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": True
+                },
+                "tooltip": {
+                "maxHeight": 600,
+                "mode": "single",
+                "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "cedoc1prtq0w0b"
+                },
+                "disableTextWrap": False,
+                "editorMode": "builder",
+                "expr": "node_memory_MemTotal_bytes - node_memory_MemFree_bytes - node_memory_Cached_bytes - node_memory_Buffers_bytes",
+                "fullMetaSearch": False,
+                "includeNullMetadata": True,
+                "instant": False,
+                "interval": "",
+                "legendFormat": "Memory usage",
+                "range": True,
+                "refId": "A",
+                "useBackend": False
+                }
+            ],
+            "title": "Memory Usage",
+            "type": "timeseries"
+            },
+            {
+            "datasource": {
+                "type": "prometheus",
+                "uid": ""
+            },
+            "fieldConfig": {
+                "defaults": {
+                "color": {
+                    "mode": "palette-classic"
+                },
+                "custom": {
+                    "axisBorderShow": False,
+                    "axisCenteredZero": False,
+                    "axisColorMode": "text",
+                    "axisLabel": "",
+                    "axisPlacement": "auto",
+                    "barAlignment": 0,
+                    "drawStyle": "line",
+                    "fillOpacity": 20,
+                    "gradientMode": "opacity",
+                    "hideFrom": {
+                    "legend": False,
+                    "tooltip": False,
+                    "viz": False
+                    },
+                    "insertNulls": False,
+                    "lineInterpolation": "linear",
+                    "lineWidth": 1,
+                    "pointSize": 5,
+                    "scaleDistribution": {
+                    "type": "linear"
+                    },
+                    "showPoints": "auto",
+                    "spanNulls": False,
+                    "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                    },
+                    "thresholdsStyle": {
+                    "mode": "off"
+                    }
+                },
+                "mappings": [],
+                "min": 0,
+                "thresholds": {
+                    "mode": "percentage",
+                    "steps": [
+                    {
+                        "color": "green",
+                        "value": None
+                    },
+                    {
+                        "color": "red",
+                        "value": 50
+                    }
+                    ]
+                },
+                "unit": "percent"
+                },
+                "overrides": [
+                {
+                    "matcher": {
+                    "id": "byName",
+                    "options": "CPU usage over time"
+                    },
+                    "properties": [
+                    {
+                        "id": "color",
+                        "value": {
+                        "fixedColor": "semi-dark-yellow",
+                        "mode": "fixed"
+                        }
+                    }
+                    ]
+                }
+                ]
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 0
+            },
+            "id": 4,
+            "options": {
+                "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": True
+                },
+                "tooltip": {
+                "maxHeight": 600,
+                "mode": "single",
+                "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "cedoox9vbmvi8a"
+                },
+                "disableTextWrap": False,
+                "editorMode": "builder",
+                "expr": "100 - 100 * (avg(irate(node_cpu_seconds_total{mode=\"idle\"}[$__interval])))",
+                "fullMetaSearch": False,
+                "includeNullMetadata": False,
+                "instant": False,
+                "legendFormat": "CPU usage over time",
+                "range": True,
+                "refId": "A",
+                "useBackend": False
+                }
+            ],
+            "title": "CPU usage",
+            "type": "timeseries"
             }
         ],
         "refresh": "5s",

@@ -1,6 +1,5 @@
 services:
   app:
-  
     build: .
     image: wave_app:1.0
     container_name: wave_app
@@ -22,11 +21,30 @@ services:
     environment:
       GF_SECURITY_ALLOW_EMBEDDING: "true"
       GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Viewer'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
       GF_AUTH_BASIC_ENABLED: "true"
       GF_INSTALL_PLUGINS: "marcusolsson-csv-datasource"
       GF_PLUGIN_ALLOW_LOCAL_MODE: "true"
-
-
     depends_on:
       - app
+    
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /:/host:ro,rslave
+    command:
+      - "--path.rootfs=/host"
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    expose:
+      - 9100
+
+networks:
+  default:
+    name: wave_net
