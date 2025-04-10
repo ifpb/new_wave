@@ -4,6 +4,10 @@
 
 [Salão de Ferramentas SBRC 2023 (previous work)](https://doi.org/10.5753/sbrc_estendido.2023.712)
 
+Experimentation is a crucial step in many types of scientific research, enabling researchers to evaluate the validity of their hypotheses. In computer networks, one of the key challenges during the experimentation phase is finding load generators capable of accurately modeling diverse traffic patterns for various applications. To address this issue, our previous work introduced a load generator designed to generate load based on real application behavior. In this sense, this work improves the WAVE - Workload Assay for Verified Experiments. A new WAVE version can generate loads for three distinct patterns: sinusoid, flashcrowd, and step. Additionally, it now supports microbursts and container-based environments.
+
+This repository is organized into three main sections: requirements, download and initialization, and finalization of the new WAVE tool.
+
 ## Checking the Required Requirements
 
 ### Checking if Python3 is installed and it's version:
